@@ -1,0 +1,191 @@
+/* ═══════════════════════════════════════════════════════════════════
+   CALISTHENICS SKILL TREE — GLOBAL STYLES
+   ═══════════════════════════════════════════════════════════════════ */
+
+/* ── Base ────────────────────────────────────────────────────────── */
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  padding: 0;
+  font-family: 'Share Tech Mono', monospace;
+  background-color: #050d1a;
+}
+
+/* ── Utilities ───────────────────────────────────────────────────── */
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0; }
+}
+.blink { animation: blink 1s step-end infinite; }
+
+@keyframes pulse-glow {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0.6; }
+}
+.pulse { animation: pulse-glow 2s ease-in-out infinite; }
+
+/* ── Skill node ──────────────────────────────────────────────────── */
+.skill-node-root {
+  transition: transform 0.2s ease;
+}
+.skill-node-root:hover {
+  transform: scale(1.05);
+  z-index: 10;
+}
+
+@keyframes skillCompleting {
+  from { background: #0f172a; }
+  to   { background: var(--node-accent); }
+}
+.skill-anim-completing {
+  animation: skillCompleting 1s ease-out forwards !important;
+}
+
+@keyframes skillUnlocking {
+  0%   { opacity: 0.1; transform: scale(0.88); }
+  60%  { opacity: 1;   transform: scale(1.08); }
+  100% { opacity: 1;   transform: scale(1); }
+}
+.skill-anim-unlocking {
+  animation: skillUnlocking 0.9s cubic-bezier(0.34, 1.56, 0.64, 1) forwards !important;
+}
+
+/* SVG border draw + pulse */
+@keyframes borderDrawIn {
+  to { stroke-dashoffset: 0; }
+}
+@keyframes borderGlowPulse {
+  0%, 100% {
+    filter: drop-shadow(0 0 3px var(--border-color))
+            drop-shadow(0 0 7px var(--border-color));
+  }
+  50% {
+    filter: drop-shadow(0 0 7px var(--border-color))
+            drop-shadow(0 0 14px var(--border-color))
+            drop-shadow(0 0 22px var(--border-color));
+  }
+}
+
+/* ── Edge animations ─────────────────────────────────────────────── */
+@keyframes edgeDrawIn {
+  to { stroke-dashoffset: 0; }
+}
+@keyframes edgeGlowPulse {
+  0%, 100% {
+    filter: drop-shadow(0 0 3px var(--edge-color))
+            drop-shadow(0 0 5px var(--edge-color));
+  }
+  50% {
+    filter: drop-shadow(0 0 5px var(--edge-color))
+            drop-shadow(0 0 10px var(--edge-color))
+            drop-shadow(0 0 16px var(--edge-color));
+  }
+}
+
+/* ── Quest window ────────────────────────────────────────────────── */
+.quest-overlay {
+  position: fixed; inset: 0;
+  background: rgba(5, 13, 26, 0.88);
+  display: flex; align-items: center; justify-content: center;
+  z-index: 1000; opacity: 0; transition: opacity 0.2s ease;
+}
+.quest-overlay-visible { opacity: 1; }
+
+.quest-window {
+  position: relative; width: 420px;
+  background: linear-gradient(160deg, #050d1a 0%, #0a1628 50%, #050d1a 100%);
+  border: 1px solid var(--accent, #3b82f6);
+  box-shadow:
+    0 0 20px var(--accent, #3b82f6),
+    0 0 60px color-mix(in srgb, var(--accent, #3b82f6) 25%, transparent),
+    inset 0 0 40px color-mix(in srgb, var(--accent, #3b82f6) 4%, transparent);
+  transform: scale(0.88) translateY(24px); opacity: 0;
+  transition: transform 0.28s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.2s ease;
+  overflow: hidden;
+}
+.quest-window-visible { transform: scale(1) translateY(0); opacity: 1; }
+
+.qw-corner { position: absolute; width: 16px; height: 16px; border-style: solid; z-index: 10; }
+.qw-corner.tl { top: -1px;    left: -1px;  border-width: 2px 0 0 2px; }
+.qw-corner.tr { top: -1px;    right: -1px; border-width: 2px 2px 0 0; }
+.qw-corner.bl { bottom: -1px; left: -1px;  border-width: 0 0 2px 2px; }
+.qw-corner.br { bottom: -1px; right: -1px; border-width: 0 2px 2px 0; }
+
+.qw-scanlines {
+  position: absolute; inset: 0; pointer-events: none; z-index: 2;
+  background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,0.18) 2px, rgba(0,0,0,0.18) 4px);
+}
+
+.qw-header {
+  position: relative; z-index: 3;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 10px 14px; border-bottom: 1px solid;
+  background: color-mix(in srgb, var(--accent, #3b82f6) 8%, transparent);
+}
+.qw-system-tag { font-family: 'Orbitron', sans-serif; font-size: 9px; letter-spacing: 3px; display: flex; align-items: center; gap: 6px; }
+.qw-header-title { font-family: 'Orbitron', sans-serif; font-size: 10px; letter-spacing: 3px; color: #8eacc8; }
+.qw-close-btn { background: none; border: none; cursor: pointer; padding: 2px; display: flex; align-items: center; opacity: 0.6; transition: opacity 0.2s; }
+.qw-close-btn:hover { opacity: 1; }
+
+.qw-identity {
+  position: relative; z-index: 3;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 14px; border-bottom: 1px solid;
+}
+.qw-skill-name { font-family: 'Orbitron', sans-serif; font-size: 16px; font-weight: 700; letter-spacing: 1.5px; color: #fff; }
+.qw-category-badge { font-family: 'Orbitron', sans-serif; font-size: 9px; letter-spacing: 2px; padding: 4px 10px; border: 1px solid; }
+
+.qw-body { position: relative; z-index: 3; padding: 14px; display: flex; flex-direction: column; gap: 10px; }
+.qw-label { font-size: 9px; letter-spacing: 2px; color: #3a5470; margin-bottom: 3px; font-family: 'Orbitron', sans-serif; }
+.qw-description { font-size: 12px; color: #7a9ab8; line-height: 1.7; margin: 0; }
+.qw-divider { height: 1px; margin: 2px 0; }
+.qw-two-col { display: flex; justify-content: space-between; align-items: flex-start; }
+.qw-value { font-size: 13px; color: #fff; margin-top: 2px; }
+
+.qw-input-row { display: flex; align-items: center; gap: 10px; }
+.qw-input {
+  width: 90px; padding: 8px 12px; background: #030810; border: 1px solid;
+  font-family: 'Share Tech Mono', monospace; font-size: 18px; color: #fff;
+  outline: none; transition: box-shadow 0.2s;
+}
+.qw-input:focus { box-shadow: 0 0 10px var(--accent, #3b82f6); }
+.qw-unit-label { font-family: 'Orbitron', sans-serif; font-size: 11px; letter-spacing: 2px; }
+
+.qw-progress-row { display: flex; justify-content: space-between; align-items: center; }
+.qw-progress-track { height: 6px; background: #030810; border: 1px solid color-mix(in srgb, var(--accent, #3b82f6) 30%, transparent); overflow: hidden; }
+.qw-progress-fill { height: 100%; transition: width 0.35s ease; }
+.qw-percent { font-family: 'Orbitron', sans-serif; font-size: 10px; letter-spacing: 1px; text-align: right; }
+
+.qw-actions { display: flex; flex-direction: column; gap: 8px; margin-top: 4px; }
+.qw-btn {
+  width: 100%; padding: 11px; border: 1px solid;
+  font-family: 'Orbitron', sans-serif; font-size: 10px; font-weight: 700;
+  letter-spacing: 3px; cursor: pointer; transition: all 0.2s ease; background: transparent;
+}
+.qw-btn-primary:hover { filter: brightness(1.15); }
+.qw-btn-ghost:hover   { background: rgba(255,255,255,0.03); }
+.qw-btn-disabled { border-color: #0d1f33; color: #1e3550; cursor: not-allowed; }
+
+/* ── Intro screen ────────────────────────────────────────────────── */
+@keyframes introFadeSlide {
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.intro-line {
+  opacity: 0;
+  animation: introFadeSlide 0.7s ease-out forwards;
+}
+
+/* ── Rank up screen ──────────────────────────────────────────────── */
+@keyframes rankLetterPulse {
+  0%, 100% {
+    text-shadow: 0 0 30px var(--rank-color), 0 0 60px var(--rank-color), 0 0 100px var(--rank-color);
+  }
+  50% {
+    text-shadow: 0 0 60px var(--rank-color), 0 0 120px var(--rank-color), 0 0 200px var(--rank-color);
+  }
+}
+.rank-letter-pulse {
+  animation: rankLetterPulse 1.4s ease-in-out infinite;
+}
